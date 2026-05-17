@@ -12,70 +12,69 @@
     --bg:#0a0a0a;
     --ink:#f4f0e8;
     --ink-dim:#8b847b;
-    --ink-subtle:#666;
+    --ink-subtle:#555;
     --rule:#1c1c1c;
     --red:#dc0000;
     --serif:"Bodoni Moda",Georgia,serif;
-    --ease:cubic-bezier(0.19,1,0.22,1);
-    --ease-out:cubic-bezier(0.16,1,0.3,1);
-    --ease-smooth:cubic-bezier(0.25,0.1,0.25,1);
   }
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html,body{
     background:var(--bg);color:var(--ink);font-family:var(--serif);
-    -webkit-font-smoothing:antialiased;overflow:hidden;height:100%;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
   }
   a,button{color:inherit;text-decoration:none;cursor:pointer}
   img{max-width:100%;display:block}
   ::selection{background:var(--red);color:#fff}
 
-  /* BACKGROUND GRID */
+  /* BG GRID */
   .bg-grid{
     position:fixed;inset:0;pointer-events:none;z-index:0;
-    background-image:
-      linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
-    background-size:80px 80px;
+    background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+    background-size:100px 100px;
   }
 
-  /* SCROLL CONTAINER */
-  #world{
-    position:fixed;top:0;left:0;will-change:transform;
-  }
-  .panel{
-    position:absolute;top:0;width:100vw;height:100vh;overflow:hidden;
-  }
+  /* SMOOTH SCROLL CONTAINER */
+  html.lenis{height:auto}
+  .lenis.lenis-smooth{scroll-behavior:auto}
+  .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+  .lenis.lenis-stopped{overflow:hidden}
+  .lenis.lenis-scrolling iframe{pointer-events:none}
+
+  /* WEBGL CANVAS */
+  #webgl-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+  /* MAIN CONTENT */
+  main{position:relative;z-index:2}
 
   /* NAV */
   .topbar{
     position:fixed;top:0;left:0;right:0;z-index:100;
     display:flex;align-items:center;justify-content:space-between;
-    padding:20px 40px;background:linear-gradient(to bottom,rgba(10,10,10,.95),transparent);
+    padding:20px 40px;mix-blend-mode:difference;
   }
-  .logo{font-size:22px;font-weight:700;font-style:italic;letter-spacing:.05em}
+  .logo{font-size:22px;font-weight:700;font-style:italic;letter-spacing:.05em;color:#fff}
   .logo span{color:var(--red)}
   .nav-links{display:flex;gap:24px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:500}
-  .nav-links a{opacity:.6;transition:opacity .3s}
+  .nav-links a{opacity:.7;transition:opacity .3s}
   .nav-links a:hover{opacity:1;color:var(--red)}
   .nav-right{display:flex;align-items:center;gap:24px}
-  .socials{display:flex;gap:12px;border-left:1px solid var(--rule);padding-left:20px}
-  .socials a{font-size:10px;color:var(--ink-dim);transition:color .3s}
-  .socials a:hover{color:var(--red)}
-  .lang{display:flex;gap:10px;font-size:10px;letter-spacing:.18em;color:var(--ink-dim)}
-  .lang a{opacity:.5;transition:opacity .3s}
-  .lang a.active{opacity:1;color:var(--ink)}
+  .socials{display:flex;gap:12px;border-left:1px solid rgba(255,255,255,.2);padding-left:20px}
+  .socials a{font-size:10px;opacity:.6;transition:opacity .3s}
+  .socials a:hover{opacity:1;color:var(--red)}
+  .lang{display:flex;gap:10px;font-size:10px;letter-spacing:.18em;opacity:.6}
+  .lang a{transition:opacity .3s}
+  .lang a:hover,.lang a.active{opacity:1}
   @media(max-width:900px){.nav-links,.socials{display:none}}
 
-  /* CHAPTERS BUTTON */
-  .chap-btn{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+  .chap-btn{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#fff}
   .chap-btn .g{width:12px;height:12px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
-  .chap-btn .g i{background:var(--ink);transition:background .3s}
+  .chap-btn .g i{background:#fff;transition:background .3s}
   .chap-btn:hover .g i{background:var(--red)}
 
-  /* CHAPTERS OVERLAY */
+  /* CHAPTERS */
   .chap-overlay{
-    position:fixed;inset:0;background:#050505;z-index:200;
-    transform:translateY(-100%);transition:transform .8s var(--ease);
+    position:fixed;inset:0;background:rgba(5,5,5,.98);z-index:200;
+    transform:translateY(-100%);will-change:transform;
   }
   .chap-overlay.open{transform:translateY(0)}
   .chap-header{display:flex;justify-content:space-between;align-items:center;padding:24px 40px;border-bottom:1px solid var(--rule)}
@@ -88,28 +87,23 @@
   .chap-list li{
     display:flex;align-items:center;gap:40px;padding:20px 0;border-bottom:1px solid var(--rule);
     font-size:clamp(36px,5vw,72px);font-style:italic;color:var(--ink-dim);cursor:pointer;
-    transition:color .4s var(--ease),padding-left .4s var(--ease);
   }
   .chap-list li:hover{color:var(--ink);padding-left:20px}
   .chap-list li .n{font-family:sans-serif;font-size:12px;letter-spacing:.2em;color:var(--red);min-width:40px}
 
   /* HERO */
-  .p-hero{background:#000}
-  .hero-fb{position:absolute;inset:0;background:linear-gradient(160deg,#1a0000,#0a0a0a,#000)}
-  .hero-fb::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(220,0,0,.2),transparent 50%)}
-  .hero-video{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;filter:brightness(.45)}
+  .p-hero{height:100vh;display:flex;align-items:flex-end;position:relative;background:#000;overflow:hidden}
+  .hero-fb{position:absolute;inset:0;background:linear-gradient(160deg,#1a0000,#0a0a0a,#000);will-change:transform}
+  .hero-fb::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(220,0,0,.15),transparent 50%)}
+  .hero-video{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;filter:brightness(.45);will-change:transform}
   .hero-corner{position:absolute;top:0;left:0;width:200px;height:80px;background:var(--red);clip-path:polygon(0 0,100% 0,75% 100%,0 100%);z-index:3}
-  .hero-content{position:relative;z-index:4;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:100px 6vw 60px}
-  .hero-title{
-    font-size:clamp(80px,14vw,260px);line-height:.86;font-weight:400;color:#fff;font-style:italic;
-  }
+  .hero-content{position:relative;z-index:4;width:100%;padding:100px 6vw 60px}
+  .hero-title{font-size:clamp(80px,14vw,280px);line-height:.86;font-weight:400;color:#fff;font-style:italic;will-change:transform,opacity}
   .hero-title span{display:block;overflow:hidden;padding:.02em 0}
-  .hero-title i{display:block;transform:translateY(110%);transition:transform 1.2s var(--ease)}
+  .hero-title i{display:block;transform:translateY(120%)}
   .hero-title em{color:var(--red)}
-  body.loaded .hero-title i{transform:translateY(0)}
-  body.loaded .hero-title span:nth-child(2) i{transition-delay:.12s}
 
-  .hero-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px}
+  .hero-footer{display:flex;justify-content:space-between;align-items:flex-end;margin-top:40px;will-change:opacity}
   .marquee{flex:1;max-width:600px;overflow:hidden;mask-image:linear-gradient(to right,transparent,#000 8%,#000 92%,transparent)}
   .marquee-track{display:flex;gap:50px;animation:marq 16s linear infinite}
   .marquee-item{display:flex;align-items:center;gap:14px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;color:#fff}
@@ -120,50 +114,41 @@
   .scroll-hint .bar::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--red);animation:scrl 2.2s ease-in-out infinite}
   @keyframes scrl{0%{top:-50%}50%{top:100%}100%{top:-50%}}
 
-  /* TRAIN HEADERS */
-  .p-train{display:flex;align-items:center;padding-left:6vw;background:var(--bg)}
-  .train-line{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(to right,transparent,rgba(220,0,0,.3),transparent);opacity:0;transition:opacity .7s}
-  .p-train.active .train-line{opacity:1}
-  .train-content{display:flex;align-items:baseline;gap:30px;opacity:0;transform:translateY(40px);filter:blur(8px);transition:all .8s var(--ease)}
-  .p-train.active .train-content{opacity:1;transform:translateY(0);filter:blur(0)}
+  /* TRAIN */
+  .p-train{min-height:100vh;display:flex;align-items:center;padding-left:6vw;position:relative;background:var(--bg)}
+  .train-line{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(to right,transparent,rgba(220,0,0,.3),transparent)}
+  .train-content{display:flex;align-items:baseline;gap:30px;will-change:transform,opacity}
   .train-num{font-size:clamp(24px,3vw,56px);font-style:italic;color:var(--red)}
-  .train-title{font-size:clamp(64px,12vw,200px);font-style:italic;line-height:.88;letter-spacing:-.02em}
+  .train-title{font-size:clamp(64px,12vw,220px);font-style:italic;line-height:.88;letter-spacing:-.02em}
   .train-title em{color:var(--red)}
 
-  /* CONTENT PANELS */
-  .p-content{background:var(--bg);padding:140px 6vw;display:flex;align-items:center}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;width:100%}
-  @media(max-width:900px){.two-col{grid-template-columns:1fr;gap:40px}}
+  /* CONTENT */
+  .p-content{min-height:100vh;padding:140px 6vw;display:flex;align-items:center;background:var(--bg)}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;width:100%}
+  @media(max-width:900px){.two-col{grid-template-columns:1fr;gap:60px}}
 
   .eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:20px}
   .eyebrow::before{content:"";width:28px;height:1px;background:var(--red)}
-
-  .section-title{font-size:clamp(44px,5vw,92px);font-style:italic;line-height:.94;letter-spacing:-.02em;margin-bottom:30px}
+  .section-title{font-size:clamp(44px,5vw,96px);font-style:italic;line-height:.94;letter-spacing:-.02em;margin-bottom:30px;will-change:transform,opacity}
   .section-title em{color:var(--red)}
-
-  .lede{font-size:clamp(18px,2vw,26px);font-style:italic;line-height:1.35;color:var(--ink);margin-bottom:24px}
-  .body-text{font-size:15px;line-height:1.75;color:var(--ink-dim);max-width:480px}
+  .lede{font-size:clamp(18px,2vw,28px);font-style:italic;line-height:1.35;color:var(--ink);margin-bottom:24px;will-change:transform,opacity}
+  .body-text{font-size:15px;line-height:1.75;color:var(--ink-dim);max-width:480px;will-change:transform,opacity}
   .body-text + .body-text{margin-top:14px}
 
-  /* IMAGES */
-  .img-reveal{position:relative;overflow:hidden;aspect-ratio:4/5}
-  .img-reveal img{width:100%;height:100%;object-fit:cover;transform:scale(1.2);transition:transform 1.8s var(--ease)}
-  .img-reveal.revealed img{transform:scale(1)}
-  .img-reveal::after{
-    content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.15) 50%,transparent 100%);
-    transform:translateX(-100%);transition:transform 1s var(--ease);
-  }
-  .img-reveal.revealed::after{transform:translateX(100%)}
+  /* IMAGES WITH WEBGL */
+  .img-container{position:relative;aspect-ratio:4/5;overflow:hidden;will-change:transform}
+  .img-container img{width:100%;height:100%;object-fit:cover}
+  .webgl-wrap{position:absolute;inset:0;will-change:transform}
 
   /* STATS */
-  .p-stats{background:var(--bg);padding:140px 0 100px}
+  .p-stats{min-height:100vh;padding:140px 0 100px;background:var(--bg)}
   .stats-header{text-align:center;margin-bottom:60px;padding:0 6vw}
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);max-width:1100px;margin:0 auto}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);max-width:1100px;margin:0 auto;will-change:transform}
   @media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
-  .stat{background:#0a0a0a;padding:50px 20px;text-align:center;position:relative}
-  .stat::before{content:"";position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red);transition:width .8s var(--ease)}
+  .stat{background:#0a0a0a;padding:50px 20px;text-align:center;position:relative;will-change:transform}
+  .stat::before{content:"";position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--red)}
   .stat:hover::before{width:100%}
-  .stat-num{font-size:clamp(48px,6vw,96px);font-style:italic;color:var(--ink);line-height:1;display:block;margin-bottom:12px}
+  .stat-num{font-size:clamp(48px,6vw,96px);font-style:italic;color:var(--ink);line-height:1;display:block;margin-bottom:12px;will-change:transform,opacity}
   .stat-label{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--red);font-weight:600}
 
   .info-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:50px;max-width:900px;margin:50px auto 0;padding:40px 6vw 0;border-top:1px solid var(--rule)}
@@ -171,30 +156,30 @@
   .info-bar p{font-size:22px;font-style:italic}
   .ferrari{font-family:var(--serif);font-weight:700;font-style:italic;font-size:26px;color:var(--red);border:1px solid var(--red);padding:4px 14px}
 
-  /* HELMET CAROUSEL */
+  /* HELMET */
   .helmet-carousel{margin-top:70px;padding:0 6vw}
-  .helmet-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+  .helmet-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;cursor:grab}
+  .helmet-track:active{cursor:grabbing}
   .helmet-track::-webkit-scrollbar{display:none}
-  .helmet-card{flex:0 0 160px;scroll-snap-align:center;position:relative}
+  .helmet-card{flex:0 0 160px;scroll-snap-align:center;position:relative;will-change:transform}
   .helmet-card img{width:100%;aspect-ratio:1;object-fit:cover;filter:grayscale(25%);transition:filter .4s,transform .4s}
   .helmet-card:hover img{filter:grayscale(0%);transform:scale(1.03)}
   .helmet-card .num{position:absolute;bottom:10px;left:10px;font-size:10px;letter-spacing:.2em;background:rgba(0,0,0,.7);padding:4px 10px;color:#fff}
 
   /* HIGHLIGHTS */
-  .p-highlights{background:#111;padding:140px 6vw;position:relative;overflow:hidden}
-  .p-highlights::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(220,0,0,.08) 0%,transparent 50%,rgba(0,0,0,.7) 100%)}
+  .p-highlights{min-height:100vh;padding:140px 6vw;position:relative;background:#111;overflow:hidden}
+  .hl-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(220,0,0,.08) 0%,transparent 50%,rgba(0,0,0,.7) 100%);pointer-events:none}
   .hl-content{position:relative;z-index:2}
-  .hl-title{font-size:clamp(44px,5vw,92px);font-style:italic;color:#fff;margin-bottom:60px}
+  .hl-title{font-size:clamp(44px,5vw,96px);font-style:italic;color:#fff;margin-bottom:60px;will-change:transform,opacity}
   .hl-title em{color:var(--red)}
-  .hl-track{display:flex;gap:30px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .hl-track{display:flex;gap:30px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;cursor:grab}
+  .hl-track:active{cursor:grabbing}
   .hl-track::-webkit-scrollbar{display:none}
   .hl-card{
     flex:0 0 360px;scroll-snap-align:center;
     background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
-    padding:36px;opacity:0;transform:translateY(50px);
-    transition:opacity .7s var(--ease),transform .7s var(--ease),background .3s,border-color .3s;
+    padding:36px;will-change:transform,opacity,background,border-color;
   }
-  .hl-card.in{opacity:1;transform:translateY(0)}
   .hl-card:hover{background:rgba(255,255,255,.06);border-color:rgba(220,0,0,.3)}
   .hl-card .year{font-size:60px;font-style:italic;color:var(--red);opacity:.7;line-height:1;margin-bottom:14px}
   .hl-card .event{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px}
@@ -204,44 +189,40 @@
 
   .hl-nav{margin-top:40px;display:flex;justify-content:space-between;align-items:center}
   .hl-dots{display:flex;gap:10px}
-  .hl-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:background .3s,transform .3s}
+  .hl-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer}
   .hl-dot.active{background:var(--red);transform:scale(1.4)}
   .hl-arrows{display:flex;gap:10px}
-  .hl-arrows button{width:40px;height:40px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--ink);font-size:16px;transition:border-color .3s,background .3s,color .3s}
+  .hl-arrows button{width:40px;height:40px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--ink);font-size:16px;transition:all .3s}
   .hl-arrows button:hover{border-color:var(--red);background:var(--red);color:#fff}
 
-  /* QUOTES */
-  .p-quote{background:#000}
-  .quote-bg{position:absolute;inset:0;z-index:0}
-  .quote-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) grayscale(30%);transform:scale(1.05);transition:transform 3s var(--ease)}
-  .p-quote.active .quote-bg img{transform:scale(1.02)}
+  /* QUOTE */
+  .p-quote{min-height:100vh;display:flex;align-items:center;position:relative;background:#000}
+  .quote-bg{position:absolute;inset:0;will-change:transform}
+  .quote-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) grayscale(30%)}
   .quote-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.3) 50%,rgba(0,0,0,.8))}
-  .quote-inner{position:relative;z-index:2;padding:60px;max-width:1000px;margin:0 auto;text-align:center}
-  .quote-mark{font-size:120px;color:var(--red);line-height:.8;opacity:0;transform:translateY(20px);transition:opacity .6s .2s,transform .6s .2s}
-  .p-quote.active .quote-mark{opacity:.5;transform:translateY(0)}
-  .quote-text{font-size:clamp(34px,5vw,68px);font-style:italic;color:#fff;line-height:1.12;opacity:0;transform:translateY(30px);transition:opacity .7s .3s,transform .7s .3s}
-  .p-quote.active .quote-text{opacity:1;transform:translateY(0)}
-  .quote-author{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:30px;opacity:0;transform:translateY(10px);transition:opacity .5s .5s,transform .5s .5s}
-  .p-quote.active .quote-author{opacity:1;transform:translateY(0)}
+  .quote-inner{position:relative;z-index:2;padding:60px;max-width:1000px;margin:0 auto;text-align:center;will-change:transform,opacity}
+  .quote-mark{font-size:120px;color:var(--red);line-height:.8;opacity:0}
+  .quote-text{font-size:clamp(34px,5vw,72px);font-style:italic;color:#fff;line-height:1.12;opacity:0}
+  .quote-author{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-top:30px;opacity:0}
 
   /* TIMELINE */
-  .p-timeline{background:var(--bg);padding:140px 6vw}
+  .p-timeline{min-height:100vh;padding:140px 6vw;background:var(--bg)}
   .timeline-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-top:60px;padding-top:50px;border-top:1px solid var(--rule)}
   @media(max-width:800px){.timeline-grid{grid-template-columns:repeat(2,1fr)}}
   .tl-item{position:relative;padding-top:30px;border-top:2px solid var(--red)}
   .tl-item::before{content:"";position:absolute;top:-5px;left:0;width:8px;height:8px;background:var(--red);border-radius:50%}
-  .tl-item .year{font-size:40px;font-style:italic;margin-bottom:14px}
+  .tl-item .year{font-size:40px;font-style:italic;margin-bottom:14px;will-change:transform,opacity}
   .tl-item p{font-size:13px;color:var(--ink-dim);line-height:1.6}
 
   /* GALLERY */
-  .p-gallery{background:#080808;padding:140px 6vw}
+  .p-gallery{min-height:100vh;padding:140px 6vw;background:#080808}
   .gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;grid-auto-rows:80px;margin-top:50px}
-  .gallery-item{position:relative;overflow:hidden;background:#111}
-  .gallery-item .img-reveal{height:100%;width:100%;aspect-ratio:unset}
+  .gallery-item{position:relative;overflow:hidden;background:#111;will-change:transform}
+  .gallery-item .img-container{height:100%;width:100%;aspect-ratio:unset}
   .gallery-item:hover img{transform:scale(1.06)}
   .gallery-item .cap{
     position:absolute;bottom:12px;left:12px;font-size:10px;letter-spacing:.25em;text-transform:uppercase;
-    background:rgba(0,0,0,.7);color:#fff;padding:5px 10px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;
+    background:rgba(0,0,0,.7);color:#fff;padding:5px 10px;opacity:0;transform:translateY(6px);transition:all .3s;
   }
   .gallery-item:hover .cap{opacity:1;transform:translateY(0)}
   .g1{grid-column:span 5;grid-row:span 3}
@@ -253,52 +234,47 @@
   .g7{grid-column:span 4;grid-row:span 3}
   .g8{grid-column:span 4;grid-row:span 2}
 
-  /* LIFE SECTIONS */
-  .p-life{background:#111}
-  .life-bg{position:absolute;inset:0;z-index:0}
-  .life-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.45);transform:scale(1.08);transition:transform 2s var(--ease)}
-  .p-life.active .life-bg img{transform:scale(1)}
+  /* LIFE */
+  .p-life{min-height:100vh;display:flex;align-items:flex-end;position:relative;background:#111}
+  .life-bg{position:absolute;inset:0;will-change:transform}
+  .life-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.45)}
   .life-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.95) 0%,rgba(0,0,0,.25) 60%)}
   .life-content{
-    position:absolute;left:0;right:0;bottom:0;padding:0 80px 80px;z-index:2;
+    position:relative;z-index:2;width:100%;padding:0 80px 80px;
     display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:60px;
   }
   @media(max-width:900px){.life-content{grid-template-columns:1fr;padding:0 30px 50px}}
-  .life-label{font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:18px;opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
-  .life-title{font-size:clamp(52px,8vw,130px);font-style:italic;color:#fff;line-height:.9;opacity:0;transform:translateY(40px);transition:opacity .7s .1s var(--ease),transform .7s .1s var(--ease)}
+  .life-label{font-size:12px;letter-spacing:.35em;text-transform:uppercase;color:var(--red);margin-bottom:18px;opacity:0}
+  .life-title{font-size:clamp(52px,8vw,140px);font-style:italic;color:#fff;line-height:.9;opacity:0}
   .life-title em{color:var(--red)}
-  .life-text{font-size:15px;line-height:1.7;color:rgba(255,255,255,.65);max-width:420px;opacity:0;transform:translateY(30px);transition:opacity .6s .2s var(--ease),transform .6s .2s var(--ease)}
-  .p-life.active .life-label,.p-life.active .life-title,.p-life.active .life-text{opacity:1;transform:translateY(0)}
-  .life-counter{
-    position:absolute;top:50%;right:50px;transform:translateY(-50%) rotate(90deg);
-    font-size:11px;letter-spacing:.4em;color:rgba(255,255,255,.25);z-index:3;
-  }
+  .life-text{font-size:15px;line-height:1.7;color:rgba(255,255,255,.65);max-width:420px;opacity:0}
+  .life-counter{position:absolute;top:50%;right:50px;transform:translateY(-50%) rotate(90deg);font-size:11px;letter-spacing:.4em;color:rgba(255,255,255,.25);z-index:3}
 
   /* FOOTER */
-  .p-footer{background:#050505;padding:140px 6vw 50px}
+  .p-footer{min-height:60vh;padding:140px 6vw 50px;background:#050505}
   .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:60px;padding-bottom:50px;border-bottom:1px solid var(--rule)}
   @media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr}}
-  .footer-brand{font-size:68px;font-weight:700;font-style:italic;color:#fff}
+  .footer-brand{font-size:72px;font-weight:700;font-style:italic;color:#fff}
   .footer-brand span{color:var(--red)}
   .footer-desc{font-size:13px;color:var(--ink-dim);margin-top:16px;line-height:1.7;max-width:280px}
   .footer-col h5{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
-  .footer-col a{display:block;font-size:14px;color:var(--ink-dim);padding:4px 0;transition:color .3s,padding-left .3s}
+  .footer-col a{display:block;font-size:14px;color:var(--ink-dim);padding:4px 0;transition:all .3s}
   .footer-col a:hover{color:var(--ink);padding-left:8px}
   .footer-bottom{margin-top:30px;display:flex;justify-content:space-between;font-size:11px;color:var(--ink-subtle);letter-spacing:.15em}
 
   /* PROGRESS */
   .progress{position:fixed;bottom:0;left:0;width:100%;height:2px;background:rgba(255,255,255,.05);z-index:90}
-  .progress-bar{height:100%;background:var(--red);width:0%;transition:width .1s linear}
+  .progress-bar{height:100%;background:var(--red);width:0%}
 
   /* INDICATORS */
   .indicators{position:fixed;left:32px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:16px}
-  .ind{width:20px;height:2px;background:rgba(255,255,255,.12);transition:background .3s,width .3s}
+  .ind{width:20px;height:2px;background:rgba(255,255,255,.12);transition:all .3s}
   .ind.active{background:var(--red);width:36px}
 
   /* CURSOR */
-  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%}
-  .cursor-dot{width:6px;height:6px;background:var(--red)}
-  .cursor-ring{width:32px;height:32px;border:1px solid rgba(255,255,255,.4);transition:width .25s,height .25s,border-color .25s,background .25s}
+  .cursor-dot,.cursor-ring{position:fixed;top:0;left:0;pointer-events:none;z-index:9999;border-radius:50%;will-change:transform}
+  .cursor-dot{width:6px;height:6px;background:var(--red);z-index:10000}
+  .cursor-ring{width:32px;height:32px;border:1px solid rgba(255,255,255,.4);transition:all .25s}
   .cursor-ring.hover{width:64px;height:64px;border-color:var(--red);background:rgba(220,0,0,.08)}
   @media(max-width:900px),(hover:none){.cursor-dot,.cursor-ring{display:none}}
 </style>
@@ -306,6 +282,7 @@
 <body>
 
 <div class="bg-grid"></div>
+<canvas id="webgl-canvas"></canvas>
 <div class="cursor-dot"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
@@ -325,9 +302,7 @@
       <a>Partners</a>
       <a>News</a>
     </nav>
-    <div class="socials">
-      <a>IG</a><a>TK</a><a>YT</a><a>X</a>
-    </div>
+    <div class="socials"><a>IG</a><a>TK</a><a>YT</a><a>X</a></div>
     <div class="lang"><a class="active">EN</a><a>IT</a><a>FR</a></div>
   </div>
 </header>
@@ -346,9 +321,9 @@
   </ul>
 </div>
 
-<div id="world">
+<main>
   <!-- 0: HERO -->
-  <div class="panel p-hero" data-idx="0">
+  <section class="p-hero" data-section="0">
     <div class="hero-fb"></div>
     <video class="hero-video" autoplay muted loop playsinline>
       <source src="https://charlesleclerc.com/wp-content/uploads/2025/02/fd4a7fd7-c51386be.mp4" type="video/mp4">
@@ -373,34 +348,34 @@
         <div class="scroll-hint">Scroll to explore<div class="bar"></div></div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 1: TRAIN 01 -->
-  <div class="panel p-train" data-idx="1">
+  <section class="p-train" data-section="1">
     <div class="train-line"></div>
     <div class="train-content">
       <span class="train-num">01</span>
       <span class="train-title"><em>The</em> Driver</span>
     </div>
-  </div>
+  </section>
 
   <!-- 2: DRIVER -->
-  <div class="panel p-content" data-idx="2">
+  <section class="p-content" data-section="2">
     <div class="two-col">
-      <div>
+      <div class="text-content">
         <div class="eyebrow">The Driver</div>
         <h2 class="section-title">Talent.<br>Intelligence.<br><em>Hard work.</em></h2>
         <p class="body-text">Born in Monte Carlo on 16 October 1997, Charles Leclerc first climbed into a kart at three and a half — and never really climbed back out.</p>
         <p class="body-text">He worked through the karting ranks, made his F1 debut with Sauber in 2018, and joined Scuderia Ferrari in 2019. Wins on circuits as iconic as Monza and Monte Carlo have made him a generational figure for the Tifosi.</p>
       </div>
-      <div class="img-reveal">
+      <div class="img-container">
         <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&q=80" alt="">
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 3: STATS -->
-  <div class="panel p-stats" data-idx="3">
+  <section class="p-stats" data-section="3">
     <div class="stats-header">
       <div class="eyebrow" style="justify-content:center">By the numbers</div>
       <h2 class="section-title" style="text-align:center"><em>A career</em>, in figures.</h2>
@@ -426,10 +401,11 @@
         <div class="helmet-card"><img src="https://images.unsplash.com/photo-1583900985737-6d0495555783?w=400&q=80" alt=""><span class="num">06</span></div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 4: HIGHLIGHTS -->
-  <div class="panel p-highlights" data-idx="4">
+  <section class="p-highlights" data-section="4">
+    <div class="hl-bg"></div>
     <div class="hl-content">
       <div class="eyebrow" style="color:#fff">Career Highlights</div>
       <h2 class="hl-title">Wins that <em>mattered.</em></h2>
@@ -445,34 +421,34 @@
         <div class="hl-arrows"><button id="hlPrev">←</button><button id="hlNext">→</button></div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 5: TRAIN 02 -->
-  <div class="panel p-train" data-idx="5">
+  <section class="p-train" data-section="5">
     <div class="train-line"></div>
     <div class="train-content">
       <span class="train-num">02</span>
       <span class="train-title"><em>The</em> Beginnings</span>
     </div>
-  </div>
+  </section>
 
   <!-- 6: BEGINNINGS -->
-  <div class="panel p-content" data-idx="6">
+  <section class="p-content" data-section="6">
     <div class="two-col">
-      <div class="img-reveal">
+      <div class="img-container">
         <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1200&q=80" alt="">
       </div>
-      <div>
+      <div class="text-content">
         <div class="eyebrow">Chapter 02 — Beginnings</div>
         <h2 class="section-title">A passion<br>that became<br>a <em>dream.</em></h2>
         <p class="lede">A kart, a Monaco hillside, and a kid who knew at three years old.</p>
         <p class="body-text">Charles ran his first kart on the track managed by Jules Bianchi's father. A decade later it was Jules — by then a close friend — who urged Nicolas Todt to come watch the next race.</p>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 7: TIMELINE -->
-  <div class="panel p-timeline" data-idx="7">
+  <section class="p-timeline" data-section="7">
     <div class="eyebrow">Kart Results</div>
     <h2 class="section-title"><em>Five seasons</em>, five records.</h2>
     <div class="timeline-grid">
@@ -482,93 +458,93 @@
       <div class="tl-item"><div class="year">2012</div><p>CIK-FIA World Champion U18.</p></div>
       <div class="tl-item"><div class="year">2013</div><p>2nd in CIK-FIA KZ World Cup.</p></div>
     </div>
-  </div>
+  </section>
 
   <!-- 8: TRAIN 03 -->
-  <div class="panel p-train" data-idx="8">
+  <section class="p-train" data-section="8">
     <div class="train-line"></div>
     <div class="train-content">
       <span class="train-num">03</span>
       <span class="train-title"><em>Motor</em>sport</span>
     </div>
-  </div>
+  </section>
 
   <!-- 9: MOTORSPORT -->
-  <div class="panel p-content" data-idx="9">
+  <section class="p-content" data-section="9">
     <div class="two-col">
-      <div>
+      <div class="text-content">
         <div class="eyebrow">Chapter 03 — Motorsport</div>
         <h2 class="section-title">From karts to<br><em>single-seaters.</em></h2>
         <p class="body-text">When Nicolas Todt joined his team, the shape of Charles' career changed. The step up to single-seaters in 2014 came with the usual hurdles — and he finished his rookie season in second place.</p>
         <p class="body-text">The next season the Ferrari Driver Academy came calling. GP3 and Formula 2 titles followed in quick succession.</p>
       </div>
-      <div class="img-reveal">
+      <div class="img-container">
         <img src="https://images.unsplash.com/photo-1583900985737-6d0495555783?w=1200&q=80" alt="">
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 10: QUOTE -->
-  <div class="panel p-quote" data-idx="10">
+  <section class="p-quote" data-section="10">
     <div class="quote-bg"><img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1800&q=80" alt=""></div>
     <div class="quote-inner">
       <div class="quote-mark">"</div>
       <blockquote class="quote-text">It comes down to <em>work,</em><br>more than talent.</blockquote>
       <div class="quote-author">— Charles Leclerc</div>
     </div>
-  </div>
+  </section>
 
   <!-- 11: TRAIN 04 -->
-  <div class="panel p-train" data-idx="11">
+  <section class="p-train" data-section="11">
     <div class="train-line"></div>
     <div class="train-content">
       <span class="train-num">04</span>
       <span class="train-title">World of <em>Ferrari</em></span>
     </div>
-  </div>
+  </section>
 
   <!-- 12: FERRARI -->
-  <div class="panel p-content" data-idx="12">
+  <section class="p-content" data-section="12">
     <div class="two-col">
-      <div class="img-reveal">
+      <div class="img-container">
         <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=80" alt="">
       </div>
-      <div>
+      <div class="text-content">
         <div class="eyebrow">Chapter 04 — Ferrari</div>
         <h2 class="section-title">A dream<br>in <em>red.</em></h2>
         <p class="lede">When he played with toy cars, he always picked the red one.</p>
         <p class="body-text">In 2019, the year he turned 22, Charles joined Scuderia Ferrari — the second-youngest driver in the team's history. Wins followed at Monza (2019, 2024) and at home in Monte Carlo (2024).</p>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- 13: GALLERY -->
-  <div class="panel p-gallery" data-idx="13">
+  <section class="p-gallery" data-section="13">
     <div class="eyebrow">Gallery — On Track</div>
     <h2 class="section-title"><em>Moments</em> in the cockpit.</h2>
     <div class="gallery-grid">
-      <div class="gallery-item g1"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80" alt=""></div><div class="cap">Monza — 2024</div></div>
-      <div class="gallery-item g2"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1583900985737-6d0495555783?w=1000&q=80" alt=""></div><div class="cap">Monaco — 2024</div></div>
-      <div class="gallery-item g3"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=900&q=80" alt=""></div><div class="cap">Bahrain — 2019</div></div>
-      <div class="gallery-item g4"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1000&q=80" alt=""></div><div class="cap">Spa — 2019</div></div>
-      <div class="gallery-item g5"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1000&q=80" alt=""></div><div class="cap">Monza — 2019</div></div>
-      <div class="gallery-item g6"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1541447271487-09612b3f49f7?w=1400&q=80" alt=""></div><div class="cap">Monaco — 2024</div></div>
-      <div class="gallery-item g7"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1604147495798-57beb5d6af73?w=1100&q=80" alt=""></div><div class="cap">Monza — 2024</div></div>
-      <div class="gallery-item g8"><div class="img-reveal"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1100&q=80" alt=""></div><div class="cap">Imola — 2024</div></div>
+      <div class="gallery-item g1"><div class="img-container"><img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80" alt=""></div><div class="cap">Monza — 2024</div></div>
+      <div class="gallery-item g2"><div class="img-container"><img src="https://images.unsplash.com/photo-1583900985737-6d0495555783?w=1000&q=80" alt=""></div><div class="cap">Monaco — 2024</div></div>
+      <div class="gallery-item g3"><div class="img-container"><img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=900&q=80" alt=""></div><div class="cap">Bahrain — 2019</div></div>
+      <div class="gallery-item g4"><div class="img-container"><img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1000&q=80" alt=""></div><div class="cap">Spa — 2019</div></div>
+      <div class="gallery-item g5"><div class="img-container"><img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?w=1000&q=80" alt=""></div><div class="cap">Monza — 2019</div></div>
+      <div class="gallery-item g6"><div class="img-container"><img src="https://images.unsplash.com/photo-1541447271487-09612b3f49f7?w=1400&q=80" alt=""></div><div class="cap">Monaco — 2024</div></div>
+      <div class="gallery-item g7"><div class="img-container"><img src="https://images.unsplash.com/photo-1604147495798-57beb5d6af73?w=1100&q=80" alt=""></div><div class="cap">Monza — 2024</div></div>
+      <div class="gallery-item g8"><div class="img-container"><img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1100&q=80" alt=""></div><div class="cap">Imola — 2024</div></div>
     </div>
-  </div>
+  </section>
 
   <!-- 14: TRAIN 05 -->
-  <div class="panel p-train" data-idx="14">
+  <section class="p-train" data-section="14">
     <div class="train-line"></div>
     <div class="train-content">
       <span class="train-num">05</span>
       <span class="train-title">Life <em>as a</em> Driver</span>
     </div>
-  </div>
+  </section>
 
   <!-- 15-18: LIFE -->
-  <div class="panel p-life" data-idx="15">
+  <section class="p-life" data-section="15">
     <div class="life-bg"><img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1800&q=80" alt=""></div>
     <div class="life-content">
       <div>
@@ -578,9 +554,9 @@
       <p class="life-text">G-force, heat, mental strain. Body and mind, year-round, with a team of experts. The training camp before the season is the hardest part.</p>
     </div>
     <div class="life-counter">01 / 04</div>
-  </div>
+  </section>
 
-  <div class="panel p-life" data-idx="16">
+  <section class="p-life" data-section="16">
     <div class="life-bg"><img src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=1800&q=80" alt=""></div>
     <div class="life-content">
       <div>
@@ -590,9 +566,9 @@
       <p class="life-text">Simulator hours. The warm-up routine, unchanged. Massage, cold bath, jump rope. Helmet on — from man to driver.</p>
     </div>
     <div class="life-counter">02 / 04</div>
-  </div>
+  </section>
 
-  <div class="panel p-life" data-idx="17">
+  <section class="p-life" data-section="17">
     <div class="life-bg"><img src="https://images.unsplash.com/photo-1583900985737-6d0495555783?w=1800&q=80" alt=""></div>
     <div class="life-content">
       <div>
@@ -602,9 +578,9 @@
       <p class="life-text">Final briefing on Sunday morning. Three to five strategies. Then the lights, the adrenaline, the pace work. Race after race.</p>
     </div>
     <div class="life-counter">03 / 04</div>
-  </div>
+  </section>
 
-  <div class="panel p-life" data-idx="18">
+  <section class="p-life" data-section="18">
     <div class="life-bg"><img src="https://images.unsplash.com/photo-1551524559-8af4e6624178?w=1800&q=80" alt=""></div>
     <div class="life-content">
       <div>
@@ -614,10 +590,10 @@
       <p class="life-text">Mountain training camp: skiing, cross-country, weights. And then the rare time with the people who matter, away from the paddock.</p>
     </div>
     <div class="life-counter">04 / 04</div>
-  </div>
+  </section>
 
   <!-- 19: FOOTER -->
-  <div class="panel p-footer" data-idx="19">
+  <section class="p-footer" data-section="19">
     <div class="footer-grid">
       <div>
         <div class="footer-brand">CL<span>16</span></div>
@@ -631,79 +607,374 @@
       <span>©2026 — Replica build</span>
       <span>EN · IT · FR</span>
     </div>
-  </div>
-</div>
+  </section>
+</main>
 
 <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
 <div class="indicators" id="indicators"></div>
 
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<!-- LENIS -->
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <script>
-// SMOOTH HORIZONTAL SCROLL ENGINE
-const world = document.getElementById('world');
-const panels = document.querySelectorAll('.panel');
-const N = panels.length;
-const MAX_T = N - 1;
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
 
-const getVW = () => window.innerWidth;
-const getVH = () => window.innerHeight;
-const clamp = (v,a,b) => Math.max(a,Math.min(v,b));
-
-// Layout panels horizontally
-function layout(){
-  const vw = getVW(), vh = getVH();
-  panels.forEach((p, i) => {
-    p.style.left = (i * vw) + 'px';
-    p.style.width = vw + 'px';
-    p.style.height = vh + 'px';
-  });
-}
-layout();
-
-// Scroll state with smooth damping
-let targetT = 0, currentT = 0;
-let lastTime = performance.now();
-
-// Smooth interpolation
-const lerp = (a,b,t) => a + (b - a) * t;
-const damp = (a,b,lambda,dt) => lerp(a,b,1 - Math.exp(-lambda * dt));
-
-// Input handlers
-window.addEventListener('wheel', e => {
-  e.preventDefault();
-  targetT = clamp(targetT + e.deltaY * 0.001, 0, MAX_T);
-}, {passive:false});
-
-let touchY = 0;
-window.addEventListener('touchstart', e => { touchY = e.touches[0].clientY }, {passive:true});
-window.addEventListener('touchmove', e => {
-  e.preventDefault();
-  const dy = touchY - e.touches[0].clientY;
-  touchY = e.touches[0].clientY;
-  targetT = clamp(targetT + dy * 0.002, 0, MAX_T);
-}, {passive:false});
-
-window.addEventListener('keydown', e => {
-  if(e.key === 'ArrowDown' || e.key === 'PageDown') targetT = clamp(targetT + 1, 0, MAX_T);
-  if(e.key === 'ArrowUp' || e.key === 'PageUp') targetT = clamp(targetT - 1, 0, MAX_T);
-  if(e.key === 'End') targetT = MAX_T;
-  if(e.key === 'Home') targetT = 0;
+// ==================== LENIS SMOOTH SCROLL ====================
+const lenis = new Lenis({
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  orientation: 'vertical',
+  smoothWheel: true,
+  wheelMultiplier: 1,
+  touchMultiplier: 2,
+  infinite: false,
 });
 
-// Build indicators
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+requestAnimationFrame(raf);
+
+// Connect Lenis to ScrollTrigger
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => {
+  lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(0);
+
+// ==================== WEBGL BACKGROUND ====================
+const canvas = document.getElementById('webgl-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 500;
+
+// Create particle system for subtle background effect
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 500;
+const posArray = new Float32Array(particlesCount * 3);
+
+for(let i = 0; i < particlesCount * 3; i++) {
+  posArray[i] = (Math.random() - 0.5) * 1000;
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+const particlesMaterial = new THREE.PointsMaterial({
+  size: 2,
+  color: 0xdc0000,
+  transparent: true,
+  opacity: 0.3,
+});
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particlesMesh);
+
+function animateParticles() {
+  particlesMesh.rotation.y += 0.0003;
+  particlesMesh.rotation.x += 0.0001;
+  renderer.render(scene, camera);
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ==================== GSAP SCROLL ANIMATIONS ====================
+
+// Progress bar
+ScrollTrigger.create({
+  trigger: 'body',
+  start: 'top top',
+  end: 'bottom bottom',
+  onUpdate: (self) => {
+    document.getElementById('progressBar').style.width = self.progress * 100 + '%';
+  }
+});
+
+// Indicators
+const sections = document.querySelectorAll('[data-section]');
 const indContainer = document.getElementById('indicators');
-panels.forEach((_, i) => {
+sections.forEach((_, i) => {
   const d = document.createElement('div');
   d.className = 'ind';
-  d.addEventListener('click', () => targetT = i);
+  d.addEventListener('click', () => lenis.scrollTo(i * window.innerHeight));
   indContainer.appendChild(d);
 });
 const indicators = document.querySelectorAll('.ind');
 
-// Navigation
-function jumpTo(idx){
-  targetT = clamp(idx, 0, MAX_T);
+sections.forEach((section, i) => {
+  // Active indicator
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top center',
+    end: 'bottom center',
+    onToggle: (self) => {
+      indicators.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    }
+  });
+
+  // Train headers
+  if(section.classList.contains('p-train')) {
+    const content = section.querySelector('.train-content');
+    gsap.fromTo(content,
+      { y: 60, opacity: 0, filter: 'blur(10px)' },
+      {
+        y: 0, opacity: 1, filter: 'blur(0px)',
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  }
+
+  // Content panels
+  if(section.classList.contains('p-content')) {
+    const texts = section.querySelectorAll('.section-title, .lede, .body-text');
+    const img = section.querySelector('.img-container');
+
+    gsap.fromTo(texts,
+      { y: 40, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 60%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+
+    if(img) {
+      gsap.fromTo(img,
+        { clipPath: 'inset(0 100% 0 0)' },
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 1.2,
+          ease: 'power4.inOut',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 50%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    }
+  }
+
+  // Stats
+  if(section.classList.contains('p-stats')) {
+    const stats = section.querySelectorAll('.stat');
+    gsap.fromTo(stats,
+      { y: 40, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+
+    // Counter animation
+    const statNums = section.querySelectorAll('.stat-num');
+    statNums.forEach(num => {
+      const target = parseInt(num.dataset.count);
+      gsap.fromTo(num, { innerText: 0 }, {
+        innerText: target,
+        duration: 1.5,
+        snap: { innerText: 1 },
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 60%',
+          toggleActions: 'play none none reverse'
+        }
+      });
+    });
+  }
+
+  // Highlights
+  if(section.classList.contains('p-highlights')) {
+    const title = section.querySelector('.hl-title');
+    const cards = section.querySelectorAll('.hl-card');
+
+    gsap.fromTo(title,
+      { y: 40, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 70%' }
+      }
+    );
+
+    gsap.fromTo(cards,
+      { y: 50, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 50%' }
+      }
+    );
+  }
+
+  // Quote
+  if(section.classList.contains('p-quote')) {
+    const bg = section.querySelector('.quote-bg img');
+    const mark = section.querySelector('.quote-mark');
+    const text = section.querySelector('.quote-text');
+    const author = section.querySelector('.quote-author');
+
+    gsap.to(bg, {
+      scale: 1.05,
+      duration: 3,
+      ease: 'power1.inOut',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true
+      }
+    });
+
+    const qTl = gsap.timeline({
+      scrollTrigger: { trigger: section, start: 'top 60%', toggleActions: 'play none none reverse' }
+    });
+    qTl.to(mark, { opacity: 0.5, duration: 0.6 })
+       .to(text, { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
+       .to(author, { opacity: 1, y: 0, duration: 0.5 }, '-=0.3');
+  }
+
+  // Timeline
+  if(section.classList.contains('p-timeline')) {
+    const items = section.querySelectorAll('.tl-item');
+    gsap.fromTo(items,
+      { y: 30, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 70%' }
+      }
+    );
+  }
+
+  // Gallery
+  if(section.classList.contains('p-gallery')) {
+    const items = section.querySelectorAll('.gallery-item');
+    gsap.fromTo(items,
+      { y: 40, opacity: 0 },
+      {
+        y: 0, opacity: 1,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: section, start: 'top 60%' }
+      }
+    );
+  }
+
+  // Life sections
+  if(section.classList.contains('p-life')) {
+    const label = section.querySelector('.life-label');
+    const title = section.querySelector('.life-title');
+    const text = section.querySelector('.life-text');
+    const bg = section.querySelector('.life-bg img');
+
+    const lifeTl = gsap.timeline({
+      scrollTrigger: { trigger: section, start: 'top 50%', toggleActions: 'play none none reverse' }
+    });
+
+    lifeTl.to(label, { opacity: 1, y: 0, duration: 0.6 })
+          .to(title, { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
+          .to(text, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4');
+
+    if(bg) {
+      gsap.to(bg, {
+        scale: 1,
+        duration: 2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+    }
+  }
+});
+
+// Hero animations
+const heroTl = gsap.timeline({ delay: 0.3 });
+heroTl.to('.hero-title i', {
+  y: 0,
+  duration: 1.2,
+  stagger: 0.15,
+  ease: 'power4.out'
+}).to('.hero-footer', {
+  opacity: 1,
+  duration: 0.8,
+  ease: 'power2.out'
+}, '-=0.6');
+
+// ==================== CAREER HIGHLIGHTS SLIDESHOW ====================
+const hlTrack = document.getElementById('hlTrack');
+const hlCards = document.querySelectorAll('.hl-card');
+const hlDots = document.querySelectorAll('.hl-dot');
+let hlIdx = 0;
+
+function updateHL() {
+  hlTrack.scrollTo({ left: hlIdx * (360 + 30), behavior: 'smooth' });
+  hlDots.forEach((d, i) => d.classList.toggle('active', i === hlIdx));
+}
+
+document.getElementById('hlPrev').addEventListener('click', () => {
+  if(hlIdx > 0) { hlIdx--; updateHL(); }
+});
+document.getElementById('hlNext').addEventListener('click', () => {
+  if(hlIdx < 2) { hlIdx++; updateHL(); }
+});
+hlDots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    hlIdx = parseInt(dot.dataset.idx);
+    updateHL();
+  });
+});
+
+// Auto-advance
+setInterval(() => {
+  hlIdx = hlIdx < 2 ? hlIdx + 1 : 0;
+  updateHL();
+}, 5000);
+
+// ==================== NAVIGATION ====================
+function jumpTo(idx) {
+  lenis.scrollTo(idx * window.innerHeight);
   document.getElementById('chapOverlay').classList.remove('open');
 }
+
 document.querySelectorAll('[data-goto]').forEach(el => {
   el.addEventListener('click', e => {
     e.preventDefault();
@@ -711,108 +982,49 @@ document.querySelectorAll('[data-goto]').forEach(el => {
   });
 });
 
-// Chapters overlay
-document.getElementById('openChap').addEventListener('click', () => document.getElementById('chapOverlay').classList.add('open'));
-document.getElementById('closeChap').addEventListener('click', () => document.getElementById('chapOverlay').classList.remove('open'));
+document.getElementById('openChap').addEventListener('click', () => {
+  document.getElementById('chapOverlay').classList.add('open');
+});
+document.getElementById('closeChap').addEventListener('click', () => {
+  document.getElementById('chapOverlay').classList.remove('open');
+});
 
-// Custom cursor
+// ==================== CUSTOM CURSOR ====================
 const dot = document.querySelector('.cursor-dot');
 const ring = document.getElementById('cursorRing');
 let mx = 0, my = 0, rx = 0, ry = 0;
-window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function loop(){
-  rx = lerp(rx, mx, 0.18); ry = lerp(ry, my, 0.18);
+
+window.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+});
+
+function cursorLoop() {
+  rx += (mx - rx) * 0.15;
+  ry += (my - ry) * 0.15;
   dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
   ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-  requestAnimationFrame(loop);
-})();
+  requestAnimationFrame(cursorLoop);
+}
+cursorLoop();
+
 document.querySelectorAll('a,button,.stat,.helmet-card,.hl-card,.gallery-item,.tl-item,.chap-list li').forEach(el => {
   el.addEventListener('mouseenter', () => ring.classList.add('hover'));
   el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
 });
 
-// Career highlights
-const hlTrack = document.getElementById('hlTrack');
-const hlCards = document.querySelectorAll('.hl-card');
-const hlDots = document.querySelectorAll('.hl-dot');
-let hlIdx = 0;
-function updateHL(){
-  hlTrack.scrollTo({left: hlIdx * (360 + 30), behavior: 'smooth'});
-  hlDots.forEach((d,i) => d.classList.toggle('active', i === hlIdx));
-}
-document.getElementById('hlPrev').addEventListener('click', () => { if(hlIdx > 0){ hlIdx--; updateHL(); }});
-document.getElementById('hlNext').addEventListener('click', () => { if(hlIdx < 2){ hlIdx++; updateHL(); }});
-hlDots.forEach(dot => dot.addEventListener('click', () => { hlIdx = parseInt(dot.dataset.idx); updateHL(); }));
-setTimeout(() => hlCards.forEach((c,i) => { if(i<3) setTimeout(() => c.classList.add('in'), i*150) }), 800);
-setInterval(() => { hlIdx = hlIdx < 2 ? hlIdx + 1 : 0; updateHL(); }, 5000);
+// ==================== RESIZE ====================
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  ScrollTrigger.refresh();
+});
 
-// Main render loop
-const progressBar = document.getElementById('progressBar');
-const statNums = document.querySelectorAll('.stat-num');
-
-function render(now){
-  const dt = (now - lastTime) / 1000;
-  lastTime = now;
-
-  // Smooth damped scrolling
-  currentT = damp(currentT, targetT, 4.5, dt);
-  if(Math.abs(targetT - currentT) < 0.001) currentT = targetT;
-
-  const u = MAX_T > 0 ? currentT / MAX_T : 0;
-  const vw = getVW();
-
-  // Horizontal scroll
-  world.style.transform = `translateX(${-u * vw * (N - 1) + u * vw}px)`;
-
-  // Progress
-  progressBar.style.width = (u * 100) + '%';
-
-  // Panel states
-  panels.forEach((p, i) => {
-    const dist = currentT - i;
-    const active = Math.abs(dist) < 0.5;
-    const near = Math.abs(dist) < 1.5;
-
-    // Train headers
-    if(p.classList.contains('p-train')){
-      p.classList.toggle('active', active);
-    }
-
-    // Quote and life
-    if(p.classList.contains('p-quote') || p.classList.contains('p-life')){
-      p.classList.toggle('active', active);
-    }
-
-    // Image reveals
-    if(near){
-      p.querySelectorAll('.img-reveal').forEach(img => img.classList.add('revealed'));
-    }
-  });
-
-  // Indicators
-  const activeIdx = Math.round(currentT);
-  indicators.forEach((d,i) => d.classList.toggle('active', i === activeIdx));
-
-  // Stats counter
-  const statsPanel = 3;
-  const sd = currentT - statsPanel;
-  if(Math.abs(sd) < 1.5){
-    const progress = Math.max(0, 1 - Math.abs(sd) / 1.2);
-    statNums.forEach(el => {
-      el.textContent = Math.round(parseInt(el.dataset.count) * progress);
-    });
-  }
-
-  requestAnimationFrame(render);
-}
-
-requestAnimationFrame(render);
-
-// Resize handler
-window.addEventListener('resize', layout);
-
-// Load animation
-window.addEventListener('load', () => document.body.classList.add('loaded'));
+// Add loaded class for hero animation
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+});
 </script>
 </body>
 </html>
